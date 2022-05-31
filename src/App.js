@@ -1,25 +1,24 @@
-import logo from './logo.svg';
-import './App.css';
+import data from './data'; 
+import { useState } from 'react';
+import Header from './components/Header';
+import Birthdays from './components/Birthdays';
 
-function App() {
+const App = () => {
+  const today = new Date();
+  const [ people, setPeople ] = useState(data); 
+  const [ peopleBirthdayToday, setPeopleBirthdayToday ] = useState(people.filter(person => person.birthday.month === (today.getMonth() + 1) && person.birthday.day === today.getDate())); 
+
+  const deleteBirthday = id => {
+    setPeopleBirthdayToday(peopleBirthdayToday.filter(person => person.id !== id));
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="container">
+      <Header peopleBirthdayToday={peopleBirthdayToday} />
+      <Birthdays peopleBirthdayToday={peopleBirthdayToday} today={today} onDelete={deleteBirthday} />
+      <button className="btn" onClick={() => setPeopleBirthdayToday([])}>clear all</button>
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
